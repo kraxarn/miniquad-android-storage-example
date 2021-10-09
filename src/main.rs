@@ -18,5 +18,5 @@ fn main() {
 	let file_path = path.join("file.txt");
 	std::fs::write(file_path, VALUE);
 
-	assert_eq!(std::fs::read_to_string(file_path), VALUE);
+	assert_eq!(&std::fs::read_to_string(file_path).unwrap(), VALUE);
 }
