@@ -1,0 +1,33 @@
+name: Android
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: notfl3/cargo-apk:latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      # Temporary workaround
+      - name: Checkout submodules
+        working-directory: ${{runner.workspace}}
+        run: |
+          git clone --branch expose-internal-data-path-release https://github.com/kraxarn/miniquad.git miniquad-android
+
+      - name: Build
+        run: cargo quad-apk build --release
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: android
+          path: ${{runner.workspace}}/mcg/target/android-artifacts/release/apk/mase.apk
